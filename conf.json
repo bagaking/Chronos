@@ -1,0 +1,10 @@
+{
+  "version": 1.0,
+  "workers":[
+    {
+      "workername" : "echo",
+      "srcpath" : "cmds/echog.sh",
+      "timespan" : "3s" 
+    }
+  ]
+}

@@ -1,31 +1,41 @@
 package main
 
 import (
-	"os"
 	"fmt"
-	"time"
+	"html/template"
 	"net/http"
-	"encoding/json"
-	"github.com/astaxie/goredis"
+	"time"
+
 	"github.com/foolin/gin-template"
 	"github.com/gin-gonic/gin"
-	"github.com/urfave/cli"
+	"github.com/go-redis/redis"
 )
 
 const (
-	DB_RDS_HOST, DB_RDS_PORT, DB_RDS_NUM = "localhost", ":6379", 0
-	SVR_PORT = ":2333"
-	CONF_SH = "conf.json"
+	rdsHOST, rdsPORT, rdsNUM = "localhost", ":6379", 0
+	svrPORT                  = ":2333"
+	confPATH                 = "./conf.json"
 )
 
 var _rds *redis.Client
- 
 
 func main() {
+
+	conf := loadConfig(confPATH)
+	fmt.Printf("Conf loaded %s\n", conf)
+	//run hub
+	fmt.Println("Hub started")
+	workerhub := &Hub{}
+	for _, workerCfg := range conf.Workers {
+		workerhub.Insert(workerCfg.Timespan, workerCfg.Srcpath)
+	}
+	workerhub.Start()
+
+	//prepare db
 	_rds = redis.NewClient(&redis.Options{
-		Addr:	DB_RDS_HOST + DB_RDS_PORT,
+		Addr:     rdsHOST + rdsPORT,
 		Password: "",
-		DB: DB_RDS_NUM
+		DB:       rdsNUM,
 	})
 
 	pong, err := _rds.Ping().Result()
@@ -36,13 +46,13 @@ func main() {
 	router.HTMLRender = gintemplate.New(gintemplate.TemplateConfig{
 		Root:      "views",
 		Extension: ".tpl",
-		Master:    "layouts/master",
-		Partials:  []string{"partials/ad"},
+		Master:    "layout/master",
+		Partials:  []string{"ad"},
 		Funcs: template.FuncMap{
 			"sub": func(a, b int) int {
 				return a - b
 			},
-			"copy": func() string{
+			"copy": func() string {
 				return time.Now().Format("2006")
 			},
 		},
@@ -58,6 +68,6 @@ func main() {
 		})
 	})
 
+	router.Run(svrPORT)
 
-	router.Run(SVR_PORT)
 }
