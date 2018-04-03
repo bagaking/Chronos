@@ -2,9 +2,14 @@
   "version": "1.0",
   "workers":[
     {
-      "workername" : "echo",
+      "workername" : "echo g",
       "srcpath" : "./cmds/echog.sh",
       "timespan" : "10s" 
+    },
+    {
+      "workername" : "echo d",
+      "srcpath" : "./cmds/echod.sh",
+      "timespan" : "4s" 
     }
   ]
 }

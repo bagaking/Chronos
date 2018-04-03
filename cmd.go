@@ -16,6 +16,7 @@ type Worker struct {
 func (worker *Worker) tryTrigger(triggerTime time.Time) (out []byte, ok bool, err error) {
 	if ok = worker.triggertime.Unix() <= 0 || worker.triggertime.Add(worker.timespan).Unix() <= triggerTime.Unix(); ok {
 		worker.triggertime = triggerTime
+		//exec.Command("/bin/chmod", "a+x", worker.scriptPth).Output()
 		out, err = exec.Command("/bin/sh", worker.scriptPth).Output() // read the new src
 	}
 	//fmt.Printf("\n== %#v %#v %#v %#v\n", worker.triggertime.Unix(), worker.triggertime.Add(worker.timespan).Unix(), triggerTime.Unix(), worker.triggertime.Add(worker.timespan).Unix() <= triggerTime.Unix())
