@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/gin-gonic/gin/json"
+	"encoding/json"
 )
 
 type ConfigEntry struct {
