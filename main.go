@@ -13,7 +13,7 @@ import (
 
 const (
 	rdsHOST, rdsPORT, rdsNUM = "localhost", ":6379", 0
-	svrPORT                  = ":2333"
+	svrPORT                  = ":8020"
 	confPATH                 = "./conf.json"
 )
 
@@ -27,7 +27,7 @@ func main() {
 	fmt.Println("Hub started")
 	workerhub := &Hub{}
 	for _, workerCfg := range conf.Workers {
-		workerhub.Insert(workerCfg.Timespan, workerCfg.Srcpath)
+		workerhub.Insert(workerCfg.Workername, workerCfg.Timespan, workerCfg.Srcpath)
 	}
 	workerhub.Start()
 

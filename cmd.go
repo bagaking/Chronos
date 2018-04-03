@@ -1,9 +1,7 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"io/ioutil"
 	"os/exec"
 	"time"
 )
@@ -15,15 +13,13 @@ type Worker struct {
 	scriptPth   string
 }
 
-func (worker *Worker) tryTrigger(triggerTime time.Time) ([]byte, error) {
-	if worker.triggertime.Unix() == 0 || worker.triggertime.Add(worker.timespan).Unix() <= triggerTime.Unix() {
+func (worker *Worker) tryTrigger(triggerTime time.Time) (out []byte, ok bool, err error) {
+	if ok = worker.triggertime.Unix() <= 0 || worker.triggertime.Add(worker.timespan).Unix() <= triggerTime.Unix(); ok {
 		worker.triggertime = triggerTime
-		srcData, err := ioutil.ReadFile(worker.scriptPth)
-		srcStr := string(srcData[:])
-		out, err := exec.Command(srcStr).Output() // read the new src
-		return out, err
+		out, err = exec.Command("/bin/sh", worker.scriptPth).Output() // read the new src
 	}
-	return nil, errors.New("u shell not")
+	//fmt.Printf("\n== %#v %#v %#v %#v\n", worker.triggertime.Unix(), worker.triggertime.Add(worker.timespan).Unix(), triggerTime.Unix(), worker.triggertime.Add(worker.timespan).Unix() <= triggerTime.Unix())
+	return
 }
 
 type Hub struct {
@@ -39,10 +35,13 @@ func (hub *Hub) Start() {
 		go func() {
 			for {
 				ctime := <-tickChan
-				for _, worker := range hub.workers {
-					result, err := worker.tryTrigger(ctime)
-					if err != nil {
-						fmt.Printf("worker %s @ %s \nconsole :\n%s\n", worker.name, ctime.Unix(), result)
+				for i, _ := range hub.workers {
+					worker := &hub.workers[i]
+					result, ok, err := worker.tryTrigger(ctime)
+					if ok {
+						fmt.Printf("== worker [%s] @ %s == >\n%s", worker.name, worker.triggertime.Format("2006-01-02 15:04:05"), result)
+					} else if err != nil {
+						fmt.Println(err)
 					}
 				}
 			}
@@ -50,12 +49,13 @@ func (hub *Hub) Start() {
 	}()
 }
 
-func (hub *Hub) Insert(timespan string, srcPath string) {
+func (hub *Hub) Insert(name string, timespan string, srcPath string) {
 	dtimespan, _ := time.ParseDuration(timespan)
 	newworker := Worker{
+		name:      name,
 		timespan:  dtimespan,
 		scriptPth: srcPath,
 	}
-	fmt.Printf("create worker %s ", newworker)
+	fmt.Printf("\ncreate worker ==> %s \n", newworker)
 	hub.workers = append(hub.workers, newworker)
 }
