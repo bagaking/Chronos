@@ -14,7 +14,7 @@ import (
 const (
 	rdsHOST, rdsPORT, rdsNUM = "localhost", ":6379", 0
 	svrPORT                  = ":8020"
-	confPATH                 = "./conf.json"
+	confPATH                 = ".chronos.kh"
 )
 
 var _rds *redis.Client
@@ -23,14 +23,15 @@ func main() {
 
 	conf := loadConfig(confPATH)
 	fmt.Printf("Conf loaded %s\n", conf)
-	//run hub
 	fmt.Println("Hub started")
 	workerhub := &Hub{}
 	for _, workerCfg := range conf.Workers {
 		workerhub.Insert(workerCfg.Workername, workerCfg.Timespan, workerCfg.Srcpath)
 	}
 	workerhub.Start()
+}
 
+func webservice() {
 	//prepare db
 	_rds = redis.NewClient(&redis.Options{
 		Addr:     rdsHOST + rdsPORT,
@@ -69,5 +70,4 @@ func main() {
 	})
 
 	router.Run(svrPORT)
-
 }
