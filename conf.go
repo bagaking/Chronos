@@ -2,18 +2,19 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	"encoding/json"
 )
 
+// ConfigEntry : config of worker
 type ConfigEntry struct {
 	Workername string `json:"workername"`
 	Srcpath    string `json:"srcpath"`
 	Timespan   string `json:"timespan"`
 }
 
+// Config : global config
 type Config struct {
 	Version string        `json:"version"`
 	Workers []ConfigEntry `json:"workers"`
@@ -21,9 +22,6 @@ type Config struct {
 
 func loadConfig(path string) *Config {
 	fmt.Println("start load conf from " + path)
-	srcData, _ := ioutil.ReadFile(path)
-	fmt.Println(string(srcData[:]))
-
 	file, _ := os.Open(path)
 	decoder := json.NewDecoder(file)
 	conf := Config{}
