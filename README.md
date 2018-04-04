@@ -3,7 +3,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/bagaking/chronos)](https://goreportcard.com/badge/github.com/bagaking/chronos)
 
 ## Usage
---------
 #### requirement
 go : ver >= 1.9
 
