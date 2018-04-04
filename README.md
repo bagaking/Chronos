@@ -8,8 +8,6 @@ go : ver >= 1.9
 
 #### 2.install
 ```go get github.com/bagaking/chronos```
-or
-```go get gopkg.in/bagaking/chronos.v0```
 
 #### 3.configuration
 there should be a config file which named ```.kh.chronos.json```
