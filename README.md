@@ -3,13 +3,13 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/bagaking/chronos)](https://goreportcard.com/badge/github.com/bagaking/chronos)
 
 ## Usage
-#### requirement
+#### 1.requirement
 go : ver >= 1.9
 
-#### install
+#### 2.install
 ```go get github.com/bagaking/chronos```
 
-#### config
+#### 3.configuration
 there should be a config file which named ```.kh.chronos.json```
 
 > example:
@@ -31,5 +31,5 @@ there should be a config file which named ```.kh.chronos.json```
   }
 ```
 
-#### run
+#### 4.run
 ```chronos```
