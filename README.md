@@ -12,7 +12,8 @@ go : ver >= 1.9
 
 #### config
 there should be a config file which named ```.kh.chronos.json```
-example:
+
+> example:
 ```
   {
     "version": "1.0",
@@ -30,3 +31,6 @@ example:
     ]
   }
 ```
+
+#### run
+```chronos```
