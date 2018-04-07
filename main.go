@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 const (
@@ -24,5 +25,6 @@ func main() {
 	fmt.Printf("\nHub started:\n %#v\n", &workerhub)
 
 	for {
+		time.Sleep(time.Minute)
 	}
 }

@@ -20,9 +20,10 @@ func (worker *Worker) tryTrigger(triggerTime time.Time) (out []byte, ok bool, er
 		worker.triggertime = triggerTime
 		//exec.Command("/bin/chmod", "a+x", worker.scriptPth).Output()
 		out, err = exec.Command("/bin/sh", worker.scriptPth).Output() // read the new src
-	} else {
-		fmt.Printf("%#v %#v", worker.triggertime.Unix(), worker.triggertime.Add(worker.timespan).Unix())
 	}
+	// else {
+	// 	fmt.Printf("%#v %#v", worker.triggertime.Unix(), worker.triggertime.Add(worker.timespan).Unix())
+	// }
 	return
 }
 
@@ -39,7 +40,7 @@ func (hub *Hub) Start() {
 	tickChan := time.NewTicker(time.Millisecond * 1000).C
 
 	hubexe := func() {
-		println("enter gocorou")
+		//println("enter gocorou")
 		fmt.Printf(" ======== cmd hub start %#v ======== ", &hub)
 		for {
 			ctime := <-tickChan
