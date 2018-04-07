@@ -16,9 +16,12 @@ type Worker struct {
 
 func (worker *Worker) tryTrigger(triggerTime time.Time) (out []byte, ok bool, err error) {
 	if ok = worker.triggertime.Unix() <= 0 || worker.triggertime.Add(worker.timespan).Unix() <= triggerTime.Unix(); ok {
+		fmt.Printf("enter trigger %s", worker.name)
 		worker.triggertime = triggerTime
 		//exec.Command("/bin/chmod", "a+x", worker.scriptPth).Output()
 		out, err = exec.Command("/bin/sh", worker.scriptPth).Output() // read the new src
+	} else {
+		fmt.Printf("%#v %#v", worker.triggertime.Unix(), worker.triggertime.Add(worker.timespan).Unix())
 	}
 	return
 }
@@ -30,10 +33,13 @@ type Hub struct {
 
 // Start : start the hub and all workers
 func (hub *Hub) Start() {
+	println("enter hub")
 	<-time.NewTimer(time.Second * 1).C
+	println("prepare hub")
 	tickChan := time.NewTicker(time.Millisecond * 1000).C
 
-	go func() {
+	hubexe := func() {
+		println("enter gocorou")
 		fmt.Printf(" ======== cmd hub start %#v ======== ", &hub)
 		for {
 			ctime := <-tickChan
@@ -55,7 +61,9 @@ func (hub *Hub) Start() {
 				println(" --- ")
 			}
 		}
-	}()
+	}
+	println("hub prepared")
+	go hubexe()
 }
 
 // Insert : create a new worker and insert it to the hub
