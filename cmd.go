@@ -16,10 +16,12 @@ type Worker struct {
 
 func (worker *Worker) tryTrigger(triggerTime time.Time) (out []byte, ok bool, err error) {
 	if ok = worker.triggertime.Unix() <= 0 || worker.triggertime.Add(worker.timespan).Unix() <= triggerTime.Unix(); ok {
-		fmt.Printf("enter trigger %s", worker.name)
+		fmt.Printf("enter trigger %s\n", worker.name)
 		worker.triggertime = triggerTime
 		//exec.Command("/bin/chmod", "a+x", worker.scriptPth).Output()
-		out, err = exec.Command("/bin/sh", worker.scriptPth).Output() // read the new src
+		executor := exec.Command("/bin/sh", worker.scriptPth)
+		out, err = executor.Output() // read the new src
+		fmt.Println("mission complete.")
 	}
 	// else {
 	// 	fmt.Printf("%#v %#v", worker.triggertime.Unix(), worker.triggertime.Add(worker.timespan).Unix())
