@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"os"
 	"github.com/bagaking/bagakit/sbuilder"
+	"github.com/bagaking/bagakit/console"
 )
 
 var isWindows bool = runtime.GOOS == "windows"
@@ -40,7 +41,7 @@ func (worker *Worker) Print() {
 	sb.Appends("=w= ", worker.name, "(", worker.scriptPth ,")").NewLine()
 	sb.Appends("timespan", worker.timespan).NewLine()
 	sb.Appends("triggertime", worker.triggertime).NewLine()
-	fmt.Println(sb.String())
+	console.PrintCF("%s\n", console.SDefault, console.BGBlack, console.FGreen, sb.String())
 }
 
 func (worker *Worker) tryTrigger(triggerTime time.Time) (out []byte, ok bool, err error) {
