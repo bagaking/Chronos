@@ -29,7 +29,7 @@ func main() {
 	}
 
 	workerhub.Start()
-	console.Printf("\nHub started:\n %v\n", console.SDefault, console.BGBlack, console.FYellow,  &workerhub)
+	console.PrintCF("\nHub started:\n %v\n", console.SDefault, console.BGBlack, console.FYellow,  &workerhub)
 
 	for {
 		time.Sleep(time.Minute)
