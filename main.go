@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"time"
+	"github.com/bagaking/bagakit/console"
 )
 
 const (
@@ -28,7 +29,7 @@ func main() {
 	}
 
 	workerhub.Start()
-	fmt.Printf("\n%c[1;40;32mHub started:\n %#v%c[0m\n", 0x1B, &workerhub, 0x1B)
+	console.Printf("\nHub started:\n %v\n", console.SDefault, console.BGBlack, console.FYellow,  &workerhub)
 
 	for {
 		time.Sleep(time.Minute)
