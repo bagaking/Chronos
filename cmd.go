@@ -6,6 +6,7 @@ import (
 	"time"
 	"runtime"
 	"os"
+	"github.com/bagaking/bagakit/sbuilder"
 )
 
 var isWindows bool = runtime.GOOS == "windows"
@@ -32,6 +33,14 @@ type Worker struct {
 	triggertime time.Time
 	name        string
 	scriptPth   string
+}
+
+func (worker *Worker) Print() {
+	sb := &sbuilder.B{}
+	sb.Appends("=w= ", worker.name, "(", worker.scriptPth ,")").NewLine()
+	sb.Appends("timespan", worker.timespan).NewLine()
+	sb.Appends("triggertime", worker.triggertime).NewLine()
+	fmt.Println(sb.String())
 }
 
 func (worker *Worker) tryTrigger(triggerTime time.Time) (out []byte, ok bool, err error) {
@@ -63,7 +72,7 @@ func (hub *Hub) Start() {
 
 	hubexe := func() {
 		//println("enter gocorou")
-		fmt.Printf(" ======== cmd hub start %#v ======== ", &hub)
+		fmt.Printf(" ======== cmd hub start %#v ======== \n", &hub)
 		for {
 			ctime := <-tickChan
 			count := 0
@@ -72,7 +81,7 @@ func (hub *Hub) Start() {
 				result, ok, err := worker.tryTrigger(ctime)
 				if ok {
 					count++
-					fmt.Printf("== worker [%s] @ %s == >\n%s", worker.name, worker.triggertime.Format("2006-01-02 15:04:05"), result)
+					fmt.Printf("== worker [%s] @ %s == >\n%s\n", worker.name, worker.triggertime.Format("2006-01-02 15:04:05"), result)
 				} else if err != nil {
 					fmt.Println(err)
 				}
@@ -90,13 +99,14 @@ func (hub *Hub) Start() {
 }
 
 // Insert : create a new worker and insert it to the hub
-func (hub *Hub) Insert(name string, timespan string, srcPath string) {
+func (hub *Hub) Insert(name string, timespan string, srcPath string) *Worker {
 	dtimespan, _ := time.ParseDuration(timespan)
 	newworker := Worker{
 		name:      name,
 		timespan:  dtimespan,
 		scriptPth: srcPath,
 	}
-	fmt.Printf("\ncreate worker [%#v] < %#v > : %#v  ", newworker.name, newworker.timespan, newworker.scriptPth)
+	fmt.Printf("\ncreate worker [%#v] < %#v > : %#v  \n", newworker.name, newworker.timespan, newworker.scriptPth)
 	hub.workers = append(hub.workers, newworker)
+	return &newworker
 }
