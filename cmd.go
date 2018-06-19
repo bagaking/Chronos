@@ -4,7 +4,27 @@ import (
 	"fmt"
 	"os/exec"
 	"time"
+	"runtime"
+	"os"
 )
+
+var isWindows bool = runtime.GOOS == "windows"
+
+func getShell() string {
+	var shell string
+	if isWindows {
+		shell = os.Getenv("COMSPEC")
+		if shell == "" {
+			shell = "C:\\WINDOWS\\System32\\cmd.exe"
+		}
+	} else {
+		shell = os.Getenv("SHELL")
+		if shell == "" {
+			shell = "sh"
+		}
+	}
+	return shell
+}
 
 // Worker : bash script executor
 type Worker struct {
@@ -19,7 +39,7 @@ func (worker *Worker) tryTrigger(triggerTime time.Time) (out []byte, ok bool, er
 		fmt.Printf("enter trigger %s\n", worker.name)
 		worker.triggertime = triggerTime
 		//exec.Command("/bin/chmod", "a+x", worker.scriptPth).Output()
-		executor := exec.Command("/bin/sh", worker.scriptPth)
+		executor := exec.Command(getShell(), worker.scriptPth)
 		out, err = executor.Output() // read the new src
 		fmt.Println("mission complete.")
 	}
