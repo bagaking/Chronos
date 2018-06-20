@@ -6,4 +6,6 @@ go:
   - 1.9
 
 install:
-  - go get -v github.com/bagaking/bagakit
+  - go get -v github.com/bagaking/bagakit/console
+  - go get -v github.com/bagaking/bagakit/sbuilder
+  - go get -v github.com/bagaking/bagakit/bkjson
