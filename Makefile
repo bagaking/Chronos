@@ -4,17 +4,11 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 
-.PHONY: deps test clean build all
-
-deps:
-	$(GOGET)
-
-test:
-	$(GOTEST)
+.PHONY: clean build all
 
 clean:
 	$(GOCLEAN)
-	find bin -type f -delete
+	rm -rf ./bin
 
 build:
 	GOOS=darwin $(GOBUILD) -o bin/osx/chronos main.go
