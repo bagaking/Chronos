@@ -1,11 +1,10 @@
-
 GOCMD=go
 GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 
-.PHONY: clean build all
+.PHONY: deps test clean build all
 
 deps:
 	$(GOGET)
