@@ -7,7 +7,12 @@
 go : ver >= 1.9
 
 #### 2.install
+> go get
 ```go get github.com/bagaking/chronos```
+> or build
+```git clone https://github.com/bagaking/chronos.git```
+```cd chronos```
+```make all```
 
 #### 3.configuration
 there should be a config file which named ```.kh.chronos.json```

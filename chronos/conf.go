@@ -1,11 +1,14 @@
-package main
+package chronos
+
 
 import (
 	"fmt"
 	"os"
 
 	"encoding/json"
+	"github.com/bagaking/bagakit/console"
 )
+
 
 // ConfigEntry : config of worker
 type ConfigEntry struct {
@@ -21,13 +24,16 @@ type Config struct {
 }
 
 func loadConfig(path string) *Config {
-	fmt.Println("start load conf from " + path)
+	console.PrintCLn(console.SDefault, console.BGYellow, console.FBlue, "start load conf from ", path)
 	file, _ := os.Open(path)
-	decoder := json.NewDecoder(file)
+
 	conf := Config{}
+
+	decoder := json.NewDecoder(file)
 	err := decoder.Decode(&conf)
+
 	if err != nil {
-		fmt.Println("Error:\n", err)
+		console.PrintCLn(console.SDefault, console.BGCLEAR, console.FRed, "Error:\n", err)
 	} else {
 		fmt.Println("Conf:\n", conf)
 	}
